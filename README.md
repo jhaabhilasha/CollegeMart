@@ -50,7 +50,7 @@ A marketplace platform exclusively for college students to buy, sell, and connec
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/gauravkkr/CollegeConnect.git
+    git clone https://github.com/jhaabhilasha/college-connect.git
    cd CollegeConnect
    ```
 
@@ -183,7 +183,7 @@ This project is licensed under the ISC License.
 
 ## Authors 👥
 
-- **Gaurav Kumar** - [gauravkkr](https://github.com/gauravkkr)
+- **Abhilasha Jha** - [jhaabhilasha](https://github.com/jhaabhilasha)
 
 ---
 
