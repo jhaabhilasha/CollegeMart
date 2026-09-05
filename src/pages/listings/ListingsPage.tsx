@@ -88,6 +88,10 @@ export const ListingCard = ({ listing }: { listing: Listing }) => {
           src={listing.images[0]}
           alt={listing.title}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src =
+              'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80';
+          }}
         />
         <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm px-2.5 py-0.5 text-xs font-semibold text-white rounded-md">
           {listing.category}

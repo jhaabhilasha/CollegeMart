@@ -81,7 +81,8 @@ async function run() {
       condition: 'Like New',
       location: 'Computer Science Department',
       images: [
-        'https://images.unsplash.com/photo-1532012164546-f432f2e3777f?w=600&auto=format&fit=crop&q=80'
+        'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&auto=format&fit=crop&q=80'
       ],
       ownerId: abhilasha._id,
       ownerName: abhilasha.username,
