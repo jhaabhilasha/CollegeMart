@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { toast } from 'sonner';
 import { useAuth } from './useAuth';
+import { fetchWithAuth } from '../lib/api';
 
 // Types
 export interface Listing {
@@ -95,7 +96,7 @@ export const useListings = create<ListingsState>()((set, get) => {
       try {
         const { user } = useAuth.getState();
         if (!user) throw new Error('Not authenticated');
-        const res = await fetch(`/api/listings?ownerId=${user.id}`);
+        const res = await fetchWithAuth(`/api/listings?ownerId=${user.id}`);
         if (!res.ok) throw new Error('Failed to fetch user listings');
         const data = await res.json();
         // Handle both old array format and new paginated format
@@ -164,18 +165,13 @@ export const useListings = create<ListingsState>()((set, get) => {
     createListing: async (data: ListingFormData) => {
       set({ isLoading: true, error: null });
       try {
-        // Get current user
-        const { user, token } = useAuth.getState();
-        if (!user || !token) {
+        const { user } = useAuth.getState();
+        if (!user) {
           throw new Error('Not authenticated');
         }
         // Send POST request to backend
-        const res = await fetch('/api/listings', {
+        const res = await fetchWithAuth('/api/listings', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
           body: JSON.stringify(data),
         });
         if (!res.ok) {
@@ -209,34 +205,23 @@ export const useListings = create<ListingsState>()((set, get) => {
       set({ isLoading: true, error: null });
       
       try {
-        // Get current user
         const { user } = useAuth.getState();
-        
         if (!user) {
           throw new Error('Not authenticated');
         }
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Find listing
-        const existingListing = get().listings.find(listing => listing.id === id);
-        
-        if (!existingListing) {
-          throw new Error('Listing not found');
+
+        const res = await fetchWithAuth(`/api/listings/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify(data),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || 'Failed to update listing');
         }
-        
-        // Check ownership
-        if (existingListing.ownerId !== user.id && user.role !== 'admin') {
-          throw new Error('Not authorized to update this listing');
-        }
-        
-        // Update listing
-        const updatedListing: Listing = {
-          ...existingListing,
-          ...data,
-          updatedAt: new Date().toISOString(),
-        };
+
+        const updatedData = await res.json();
+        const updatedListing: Listing = { ...updatedData, id: updatedData._id || id };
         
         // Update state
         const updatedListings = get().listings.map(listing => 
@@ -269,17 +254,13 @@ export const useListings = create<ListingsState>()((set, get) => {
     deleteListing: async (id: string) => {
       set({ isLoading: true, error: null });
       try {
-        // Get current user and token
-        const { user, token } = useAuth.getState();
-        if (!user || !token) {
+        const { user } = useAuth.getState();
+        if (!user) {
           throw new Error('Not authenticated');
         }
         // Call backend DELETE API
-        const res = await fetch(`/api/listings/${id}`, {
+        const res = await fetchWithAuth(`/api/listings/${id}`, {
           method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
         });
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
@@ -310,15 +291,11 @@ export const useListings = create<ListingsState>()((set, get) => {
 
     markAsSold: async (id: string) => {
       try {
-        const { token } = useAuth.getState();
-        if (!token) throw new Error('Not authenticated');
+        const { user } = useAuth.getState();
+        if (!user) throw new Error('Not authenticated');
         
-        const res = await fetch(`/api/listings/${id}`, {
+        const res = await fetchWithAuth(`/api/listings/${id}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
           body: JSON.stringify({ status: 'sold' }),
         });
         
@@ -349,15 +326,11 @@ export const useListings = create<ListingsState>()((set, get) => {
 
     markAsActive: async (id: string) => {
       try {
-        const { token } = useAuth.getState();
-        if (!token) throw new Error('Not authenticated');
+        const { user } = useAuth.getState();
+        if (!user) throw new Error('Not authenticated');
         
-        const res = await fetch(`/api/listings/${id}`, {
+        const res = await fetchWithAuth(`/api/listings/${id}`, {
           method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
           body: JSON.stringify({ status: 'active' }),
         });
         

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -33,8 +33,15 @@ type SignupFormValues = z.infer<typeof signupSchema>;
 
 const SignupPage = () => {
   const navigate = useNavigate();
-  const { signup, isLoading } = useAuth();
+  const { signup, isLoading, token } = useAuth();
   const [authError, setAuthError] = useState<string | null>(null);
+
+  // If already authenticated, redirect to dashboard
+  useEffect(() => {
+    if (token) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [token, navigate]);
 
   const {
     register,
@@ -58,7 +65,8 @@ const SignupPage = () => {
       await signup(data.name, data.email, data.password, data.mobile);
       navigate('/dashboard');
     } catch (error) {
-      setAuthError('Signup failed. Please try again.');
+      const errorMsg = error instanceof Error ? error.message : 'Signup failed. Please try again.';
+      setAuthError(errorMsg);
     }
   };
 

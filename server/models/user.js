@@ -8,11 +8,14 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: [true, 'Email is required'], unique: [true, 'Email already exists'] },
   mobile: { type: String, required: [true, 'Mobile number is required'], unique: [true, 'Mobile number already exists'] },
   role: { type: String, enum: ['user', 'admin'], default: 'user' },
+  profileImage: { type: String, default: null },
   isEmailVerified: { type: Boolean, default: false },
   emailVerificationToken: String,
   emailVerificationExpires: Date,
   resetOtp: String,
   resetOtpExpires: Date,
+  loginOtp: String,
+  loginOtpExpires: Date,
 });
 
 // Hash password before saving

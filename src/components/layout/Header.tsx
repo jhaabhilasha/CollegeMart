@@ -18,6 +18,12 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  const handleLogout = () => {
+    logout();
+    setMobileMenuOpen(false);
+    navigate('/login');
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -97,7 +103,7 @@ const Header = () => {
         <Link to="/dashboard" className="flex items-center gap-2 px-2 py-1 rounded-lg hover:text-primary hover:bg-gray-100 transition"><User className="h-5 w-5" />Dashboard</Link>
         <Link to="/listings/create" className="flex items-center gap-2 px-2 py-1 rounded-lg hover:text-primary hover:bg-gray-100 transition"><PlusCircle className="h-5 w-5" />Post Item</Link>
         {token && (
-          <button onClick={logout} className="flex items-center gap-2 px-2 py-1 rounded-lg hover:text-primary hover:bg-gray-100 transition font-bold"><LogOut className="h-5 w-5" />Logout</button>
+          <button onClick={handleLogout} className="flex items-center gap-2 px-2 py-1 rounded-lg hover:text-primary hover:bg-gray-100 transition font-bold"><LogOut className="h-5 w-5" />Logout</button>
         )}
         {/* Auth Buttons */}
         {!token && (
@@ -158,7 +164,7 @@ const Header = () => {
           <Link to="/dashboard" className="flex items-center gap-2 px-2 py-2 rounded-lg hover:text-primary hover:bg-gray-100 transition" onClick={() => setMobileMenuOpen(false)}><User className="h-5 w-5" />Dashboard</Link>
           <Link to="/listings/create" className="flex items-center gap-2 px-2 py-2 rounded-lg hover:text-primary hover:bg-gray-100 transition" onClick={() => setMobileMenuOpen(false)}><PlusCircle className="h-5 w-5" />Post Item</Link>
           {token && (
-            <button onClick={() => { logout(); setMobileMenuOpen(false); }} className="flex items-center gap-2 px-2 py-2 rounded-lg hover:text-primary hover:bg-gray-100 transition font-bold"><LogOut className="h-5 w-5" />Logout</button>
+            <button onClick={handleLogout} className="flex items-center gap-2 px-2 py-2 rounded-lg hover:text-primary hover:bg-gray-100 transition font-bold"><LogOut className="h-5 w-5" />Logout</button>
           )}
           {!token && (
             <>

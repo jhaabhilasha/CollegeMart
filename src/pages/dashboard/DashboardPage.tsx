@@ -6,6 +6,7 @@ import { useListings } from '../../hooks/useListings';
 import { useEffect, useState } from 'react';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import Button from '../../components/ui/Button';
+import { fetchWithAuth } from '../../lib/api';
 
 const navLinks = [
   { label: 'Dashboard', icon: User, to: '/dashboard' },
@@ -23,7 +24,7 @@ const DashboardPage = () => {
   useEffect(() => {
     getUserListings();
     // Fetch unread messages count
-    fetch('/api/messages/unread', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+    fetchWithAuth('/api/messages/unread')
       .then(res => res.json())
       .then(data => setUnreadCount(data.count || 0))
       .catch(() => setUnreadCount(0));

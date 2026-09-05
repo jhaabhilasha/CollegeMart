@@ -1,10 +1,11 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import Layout from './components/layout/Layout';
 import AuthGuard from './components/auth/AuthGuard';
 import LoadingSpinner from './components/ui/LoadingSpinner';
 import HomePage from './pages/HomePage';
+import { useAuth } from './hooks/useAuth';
 
 // Lazy loaded routes for better performance
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
@@ -22,6 +23,13 @@ const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
 const UserListingsPage = lazy(() => import('./pages/listings/UserListingsPage'));
 
 function App() {
+  const { checkAuth } = useAuth();
+
+  // Validate session on app initialization
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
   return (
     <Suspense fallback={<div className="flex h-screen items-center justify-center"><LoadingSpinner size="lg" /></div>}>
       <Routes>
@@ -33,14 +41,12 @@ function App() {
           <Route path="listings" element={<ListingsPage />} />
           <Route path="listings/:id" element={<ListingDetailPage />} />
 
-          {/* Profile is public, not protected */}
-
           {/* Public user listings page */}
           <Route path="user/:userId/listings" element={<UserListingsPage />} />
-          <Route path="profile" element={<ProfilePage />} />
 
           {/* Protected routes */}
           <Route element={<AuthGuard />}>
+            <Route path="profile" element={<ProfilePage />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="listings/create" element={<CreateListingPage />} />
             <Route path="listings/edit/:id" element={<EditListingPage />} />

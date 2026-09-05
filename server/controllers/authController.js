@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { sendMail } = require('../utils/mailer');
+const { sendMail, sendOtpEmail, sendAccountVerificationEmail } = require('../utils/mailer');
 
 // Get frontend URL for email links
 const getFrontendUrl = () => process.env.FRONTEND_URL || 'http://localhost:5173';
@@ -17,16 +17,16 @@ exports.signup = async (req, res, next) => {
     const verificationToken = user.generateVerificationToken();
     await user.save();
     
-    // Send verification email
-    const verifyUrl = `${getFrontendUrl()}/verify-email?token=${verificationToken}`;
-    await sendMail(
-      email,
-      'Verify Your Email - CollegeConnect',
-      `Welcome to CollegeConnect!\n\nPlease verify your email by clicking the link below:\n\n${verifyUrl}\n\nThis link will expire in 24 hours.\n\nIf you didn't create an account, please ignore this email.`
-    );
+    // Send verification email safely
+    try {
+      const verifyUrl = `${getFrontendUrl()}/verify-email?token=${verificationToken}`;
+      await sendAccountVerificationEmail(email, verifyUrl);
+    } catch (emailErr) {
+      console.warn('Could not send verification email on signup (account created successfully):', emailErr.message);
+    }
     
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    // Return user object with id, name, email, and role
+    // Return user object with id, name, email, role, and profileImage
     res.status(201).json({
       user: {
         id: user._id,
@@ -35,9 +35,10 @@ exports.signup = async (req, res, next) => {
         role: user.role || 'user',
         mobile: user.mobile,
         isEmailVerified: user.isEmailVerified,
+        profileImage: user.profileImage || null,
       },
       token,
-      message: 'Account created! Please check your email to verify your account.'
+      message: 'Account created! Please verify your email.'
     });
   } catch (err) {
     // Handle duplicate key error (email, username, or mobile)
@@ -57,7 +58,7 @@ exports.signup = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const { email, mobile, password } = req.body;
+    const { email, mobile, password, rememberMe } = req.body;
     // Sanitize mobile: allow only digits if provided
     const sanitizedMobile = mobile ? String(mobile).replace(/\D/g, '') : undefined;
     let user = null;
@@ -67,9 +68,10 @@ exports.login = async (req, res, next) => {
       user = await User.findOne({ email });
     }
     if (!user || !(await user.comparePassword(password))) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Invalid credentials. Please check your email/mobile and password.' });
     }
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const expiresIn = rememberMe ? '30d' : '7d';
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn });
     res.json({
       user: {
         id: user._id,
@@ -78,6 +80,7 @@ exports.login = async (req, res, next) => {
         role: user.role || 'user',
         mobile: user.mobile,
         isEmailVerified: user.isEmailVerified,
+        profileImage: user.profileImage || null,
       },
       token
     });
@@ -138,11 +141,7 @@ exports.resendVerificationEmail = async (req, res) => {
     
     // Send verification email
     const verifyUrl = `${getFrontendUrl()}/verify-email?token=${verificationToken}`;
-    await sendMail(
-      email,
-      'Verify Your Email - CollegeConnect',
-      `Please verify your email by clicking the link below:\n\n${verifyUrl}\n\nThis link will expire in 24 hours.`
-    );
+    await sendAccountVerificationEmail(email, verifyUrl);
     
     res.json({ message: 'Verification email sent!' });
   } catch (err) {
@@ -151,17 +150,28 @@ exports.resendVerificationEmail = async (req, res) => {
 };
 
 exports.requestPasswordReset = async (req, res) => {
-  const { email } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ message: 'User not found' });
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email address is required' });
 
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  user.resetOtp = otp;
-  user.resetOtpExpires = Date.now() + 10 * 60 * 1000; // 10 min
-  await user.save();
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'No account found with this email address' });
 
-  await sendMail(email, 'Your OTP', `Your OTP is: ${otp}`);
-  res.json({ message: 'OTP sent to email' });
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.resetOtp = otp;
+    user.resetOtpExpires = Date.now() + 10 * 60 * 1000; // 10 min
+    await user.save();
+
+    try {
+      await sendOtpEmail(email, otp, 'Password Reset');
+    } catch (mailErr) {
+      console.warn('Failed to send reset OTP email via SendGrid:', mailErr.message);
+    }
+
+    res.json({ message: 'OTP sent to your email. Please enter the OTP to reset your password.' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to process password reset request' });
+  }
 };
 
 exports.verifyOtpAndResetPassword = async (req, res) => {
@@ -180,3 +190,89 @@ exports.verifyOtpAndResetPassword = async (req, res) => {
 
   res.json({ message: 'Password reset successful' });
 };
+
+// Get current authenticated user profile
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) return res.status(401).json({ message: 'Not authenticated' });
+    res.json({
+      user: {
+        id: user._id,
+        name: user.username,
+        email: user.email,
+        role: user.role || 'user',
+        mobile: user.mobile,
+        isEmailVerified: user.isEmailVerified,
+        profileImage: user.profileImage || null,
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to retrieve current user profile' });
+  }
+};
+
+// Send OTP for Login
+exports.sendLoginOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: 'Email address is required' });
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'No account found with this email address' });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.loginOtp = otp;
+    user.loginOtpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+    await user.save();
+
+    try {
+      await sendOtpEmail(email, otp, 'Login');
+    } catch (err) {
+      console.warn('Failed to send login OTP email:', err.message);
+    }
+
+    res.json({ message: 'OTP sent to your email' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to send login OTP' });
+  }
+};
+
+// Login with OTP
+exports.loginWithOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) return res.status(400).json({ message: 'Email and OTP are required' });
+
+    const user = await User.findOne({
+      email,
+      loginOtp: otp,
+      loginOtpExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired OTP' });
+    }
+
+    user.loginOtp = undefined;
+    user.loginOtpExpires = undefined;
+    await user.save();
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.json({
+      user: {
+        id: user._id,
+        name: user.username,
+        email: user.email,
+        role: user.role || 'user',
+        mobile: user.mobile,
+        isEmailVerified: user.isEmailVerified,
+        profileImage: user.profileImage || null,
+      },
+      token
+    });
+  } catch (err) {
+    res.status(500).json({ message: 'OTP login failed' });
+  }
+};
+

@@ -36,7 +36,17 @@ app.use(cors({
   },
   credentials: true
 }));
-app.use(helmet());
+
+const path = require('path');
+const fs = require('fs');
+
+app.use(helmet({ contentSecurityPolicy: false }));
+
+// Serve frontend static files if dist folder exists
+const distPath = path.join(__dirname, '../dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+}
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -68,6 +78,30 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/listings', require('./routes/listings'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/messages', require('./routes/messages'));
+
+// Non-API routes: serve frontend SPA or friendly status page instead of "Cannot GET /"
+app.use((req, res, next) => {
+  if (req.method !== 'GET' || req.path.startsWith('/api')) {
+    return next();
+  }
+  const indexPath = path.join(distPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  res.send(`
+    <div style="font-family: system-ui, -apple-system, sans-serif; text-align: center; padding: 60px 20px; color: #333;">
+      <h1 style="color: #ef6c13;">CollegeConnect Backend Server</h1>
+      <p style="font-size: 18px;">The backend API is running successfully on port 5000.</p>
+      <p>Looking for the frontend web application?</p>
+      <a href="http://localhost:5173" style="display: inline-block; background: #ef6c13; color: white; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold; margin-top: 10px;">
+        Open Frontend App (localhost:5173) &rarr;
+      </a>
+      <div style="margin-top: 30px;">
+        <a href="/api/health" style="color: #666; text-decoration: underline;">Check API Health Status</a>
+      </div>
+    </div>
+  `);
+});
 
 // Error handler middleware
 app.use(require('./middleware/errorHandler'));
@@ -118,7 +152,7 @@ const mongoOptions = {
 };
 
 // Use MONGO_URI from .env file (local or Atlas)
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/collegeconnect';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/collegeconnect';
 
 mongoose.connect(MONGO_URI, mongoOptions)
   .then(() => {

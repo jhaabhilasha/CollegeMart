@@ -77,7 +77,15 @@ const verifyResetValidator = [
     .isLength({ min: 6, max: 6 }).withMessage('OTP must be 6 digits'),
   body('newPassword')
     .notEmpty().withMessage('New password is required')
-    .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+    .isLength({ min: 6 }).withMessage('New password must be at least 6 characters'),
+  body('confirmPassword')
+    .optional()
+    .custom((value, { req }) => {
+      if (value && value !== req.body.newPassword) {
+        throw new Error('New password and confirm password do not match');
+      }
+      return true;
+    }),
   validate
 ];
 

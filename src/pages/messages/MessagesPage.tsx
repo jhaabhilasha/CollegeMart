@@ -5,6 +5,7 @@ import { useSocket } from '../../hooks/useSocket';
 import { useParams, useNavigate } from 'react-router-dom';
 import ChatBox from '../../components/messages/ChatBox';
 import { FaPlus } from 'react-icons/fa';
+import { fetchWithAuth } from '../../lib/api';
 
 const SOCKET_URL = 'http://localhost:5000'; // Adjust if needed
 
@@ -51,7 +52,7 @@ const MessagesPage: React.FC = () => {
   // Fetch all conversations for the user
   useEffect(() => {
     if (!user || !token) return;
-    fetch('/api/messages', { headers: { Authorization: `Bearer ${token}` } })
+    fetchWithAuth('/api/messages')
       .then(res => res.json())
       .then((msgs: Message[]) => {
         const convMap: Record<string, { listingId: string; receiverId: string; name: string }> = {};
@@ -79,9 +80,7 @@ const MessagesPage: React.FC = () => {
   // Fetch messages for this listing
   useEffect(() => {
     if (!listingId || !token) return;
-    fetch(`/api/messages/${listingId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    fetchWithAuth(`/api/messages/${listingId}`)
       .then(res => res.json())
       .then(async (msgs: Message[]) => {
         // Show all messages between the logged-in user and the selected user for this listing
@@ -159,13 +158,9 @@ const MessagesPage: React.FC = () => {
     setError(null);
     if (!text.trim() || !listingId || !receiverId) return;
     try {
-      const res = await fetch(`/api/messages/${listingId}`, {
+      const res = await fetchWithAuth(`/api/messages/${listingId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ text, receiverId, listingId }) // include listingId explicitly
+        body: JSON.stringify({ text, receiverId, listingId })
       });
       if (!res.ok) {
         const errMsg = await res.text();
