@@ -21,6 +21,7 @@ const MessagesPage = lazy(() => import('./pages/messages/MessagesPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
 const UserListingsPage = lazy(() => import('./pages/listings/UserListingsPage'));
+const NotesPage = lazy(() => import('./pages/notes/NotesPage'));
 
 function App() {
   const { checkAuth } = useAuth();
@@ -40,6 +41,7 @@ function App() {
           <Route path="verify-email" element={<VerifyEmailPage />} />
           <Route path="listings" element={<ListingsPage />} />
           <Route path="listings/:id" element={<ListingDetailPage />} />
+          <Route path="notes" element={<NotesPage />} />
 
           {/* Public user listings page */}
           <Route path="user/:userId/listings" element={<UserListingsPage />} />

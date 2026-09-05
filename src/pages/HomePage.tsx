@@ -38,9 +38,9 @@ const HomePage = () => {
   };
   
   const handleCategoryClick = (categoryName: string) => {
-    // Redirect to external notes URL if Notes category is clicked
+    // Open internal notes portal if Notes category is clicked
     if (categoryName === 'Notes') {
-      window.location.href = 'https://tiu-college-notes.netlify.app/';
+      navigate('/notes');
       return;
     }
     
