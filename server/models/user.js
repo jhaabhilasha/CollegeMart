@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema({
   profileImage: { type: String, default: null },
   bio: { type: String, default: '' },
   college: { type: String, default: '' },
+  studentId: { type: String, default: '' },
   year: { type: String, default: '' },
   department: { type: String, default: '' },
   isEmailVerified: { type: Boolean, default: false },

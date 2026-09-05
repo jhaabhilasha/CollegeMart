@@ -33,6 +33,13 @@ const signupValidator = [
     .trim()
     .notEmpty().withMessage('Mobile number is required')
     .matches(/^\d{10,15}$/).withMessage('Mobile must be 10-15 digits'),
+  body('college')
+    .trim()
+    .notEmpty().withMessage('College name is mandatory')
+    .isLength({ min: 2, max: 100 }).withMessage('College name must be 2-100 characters'),
+  body('studentId')
+    .trim()
+    .notEmpty().withMessage('College ID / Student ID is required'),
   validate
 ];
 

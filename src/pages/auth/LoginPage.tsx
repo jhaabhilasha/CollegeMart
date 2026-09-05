@@ -328,7 +328,7 @@ const LoginPage = () => {
                 autoComplete="username"
                 required
                 className={`mt-0 block w-full rounded-md bg-white text-gray-900 font-semibold shadow-sm border ${errors.identifier ? 'border-red-500' : 'border-gray-300'} focus:border-orange-700 focus:ring-orange-700 hover:border-orange-500 transition-all duration-200 sm:text-base px-4 py-3 placeholder-gray-400`}
-                placeholder="name@college.edu or 10-digit mobile"
+                placeholder="name@example.com or 10-digit mobile"
                 {...register('identifier')}
               />
               {errors.identifier && (

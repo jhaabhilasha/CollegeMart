@@ -174,7 +174,7 @@ exports.sendAccountVerificationEmail = async (to, verifyUrl) => {
   const subject = `Verify your CollegeConnect email address`;
   const text = `Welcome to CollegeConnect!
 
-Please verify your college email address by clicking the link below:
+Please verify your email address by clicking the link below:
 ${verifyUrl}
 
 This link is valid for 24 hours.

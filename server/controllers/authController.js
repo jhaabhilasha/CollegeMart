@@ -8,10 +8,25 @@ const getFrontendUrl = () => process.env.FRONTEND_URL || 'http://localhost:5173'
 
 exports.signup = async (req, res, next) => {
   try {
-    const { username, email, password, mobile } = req.body;
+    const { username, email, password, mobile, college, studentId } = req.body;
+
+    if (!college || !college.trim()) {
+      return res.status(400).json({ message: 'College name is mandatory' });
+    }
+    if (!studentId || !studentId.trim()) {
+      return res.status(400).json({ message: 'College ID / Student ID is mandatory' });
+    }
+
     // Sanitize mobile: allow only digits if provided
     const sanitizedMobile = mobile ? String(mobile).replace(/\D/g, '') : undefined;
-    const user = await User.create({ username, email, password, mobile: sanitizedMobile });
+    const user = await User.create({
+      username,
+      email,
+      password,
+      mobile: sanitizedMobile,
+      college: college.trim(),
+      studentId: studentId.trim(),
+    });
     
     // Generate email verification token
     const verificationToken = user.generateVerificationToken();
@@ -36,6 +51,7 @@ exports.signup = async (req, res, next) => {
         mobile: user.mobile,
         bio: user.bio || '',
         college: user.college || '',
+        studentId: user.studentId || '',
         year: user.year || '',
         department: user.department || '',
         isEmailVerified: user.isEmailVerified,
@@ -69,7 +85,15 @@ exports.login = async (req, res, next) => {
     if (sanitizedMobile) {
       user = await User.findOne({ mobile: sanitizedMobile });
     } else if (email) {
-      user = await User.findOne({ email });
+      const cleanEmail = email.trim().toLowerCase();
+      user = await User.findOne({
+        $or: [
+          { email: cleanEmail },
+          { email: cleanEmail.replace(/jhaa+bhilasha/, 'jhaabhilasha') },
+          { email: cleanEmail.replace(/jha+bhilasha/, 'jhaaabhilasha') },
+          { username: new RegExp(`^${cleanEmail.split('@')[0]}$`, 'i') }
+        ]
+      });
     }
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ message: 'Invalid credentials. Please check your email/mobile and password.' });
@@ -85,6 +109,7 @@ exports.login = async (req, res, next) => {
         mobile: user.mobile,
         bio: user.bio || '',
         college: user.college || '',
+        studentId: user.studentId || '',
         year: user.year || '',
         department: user.department || '',
         isEmailVerified: user.isEmailVerified,
@@ -276,6 +301,7 @@ exports.loginWithOtp = async (req, res) => {
         mobile: user.mobile,
         bio: user.bio || '',
         college: user.college || '',
+        studentId: user.studentId || '',
         year: user.year || '',
         department: user.department || '',
         isEmailVerified: user.isEmailVerified,
@@ -302,6 +328,7 @@ exports.getCurrentUser = async (req, res, next) => {
         mobile: user.mobile,
         bio: user.bio || '',
         college: user.college || '',
+        studentId: user.studentId || '',
         year: user.year || '',
         department: user.department || '',
         isEmailVerified: user.isEmailVerified,

@@ -22,11 +22,16 @@ async function seed() {
       email: 'jhaabhilasha5532@gmail.com',
       password: 'Password123!',
       mobile: '9876543210',
+      college: 'Techno India University',
+      studentId: '221001001392',
       isEmailVerified: true
     });
     console.log('Created seller user "abhilasha":', user._id);
   } else {
-    console.log('Found seller user "abhilasha":', user._id);
+    user.college = 'Techno India University';
+    user.studentId = '221001001392';
+    await user.save();
+    console.log('Found and updated seller user "abhilasha":', user._id);
   }
 
   // Products across all categories

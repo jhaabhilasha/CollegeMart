@@ -12,6 +12,7 @@ export interface User {
   mobile: string;
   bio?: string;
   college?: string;
+  studentId?: string;
   year?: string;
   department?: string;
   isEmailVerified?: boolean;
@@ -27,7 +28,7 @@ interface AuthState {
   // Actions
   login: (email: string | undefined, password: string, mobile: string | undefined, rememberMe?: boolean) => Promise<void>;
   loginWithOtp: (email: string, otp: string) => Promise<void>;
-  signup: (name: string, email: string, password: string, mobile: string) => Promise<void>;
+  signup: (name: string, email: string, password: string, mobile: string, college: string, studentId: string) => Promise<void>;
   logout: (notify?: boolean) => void;
   handleSessionExpired: () => void;
   checkAuth: () => Promise<void>;
@@ -129,13 +130,27 @@ export const useAuth = create<AuthState>()(
         }
       },
 
-      signup: async (name: string, email: string, password: string, mobile: string) => {
+      signup: async (
+        name: string,
+        email: string,
+        password: string,
+        mobile: string,
+        college: string,
+        studentId: string
+      ) => {
         set({ isLoading: true, error: null });
         try {
           const res = await fetch('/api/auth/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: name, email, password, mobile }),
+            body: JSON.stringify({
+              username: name,
+              email,
+              password,
+              mobile,
+              college,
+              studentId,
+            }),
           });
 
           const data = await res.json().catch(() => ({}));

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Facebook, Twitter, Instagram, Mail, Phone, MessageCircle } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Mail, Phone, MessageCircle, Globe } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -71,11 +71,26 @@ const Footer = () => {
                   WhatsApp: +91 8757313099
                 </a>
               </li>
-              <li>
-                <a href="https://www.collegewebsite.edu" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">College Website</a>
+              <li className="flex items-start">
+                <Globe className="mr-2 mt-0.5 h-5 w-5 text-gray-400" />
+                <a
+                  href="https://www.technoindiauniversity.ac.in/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  College Website
+                </a>
               </li>
               <li>
-                <a href="https://studentservices.college.edu" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">Student Services</a>
+                <a
+                  href="https://www.technoindiauniversity.ac.in/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  Student Services
+                </a>
               </li>
             </ul>
           </div>

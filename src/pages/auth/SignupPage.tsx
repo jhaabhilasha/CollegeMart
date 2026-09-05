@@ -9,12 +9,10 @@ import Button from '../../components/ui/Button';
 // Form validation schema
 const signupSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters' }),
-  email: z.string().email({ message: 'Please enter a valid email address' })
-    .refine((email) => {
-      // Simple check for educational email domains - can be expanded
-      const eduDomains = ['edu', 'ac.uk', 'ac.in', 'edu.au'];
-      return eduDomains.some(domain => email.endsWith(domain)) || true; // Skipping for demo
-    }, { message: 'Please use your college email address' }),
+  email: z.string().email({ message: 'Please enter a valid email address' }),
+  college: z.string().trim().min(2, { message: 'College name is mandatory' }),
+  studentId: z.string().trim().min(1, { message: 'College / Student ID is required' }),
+  mobile: z.string().min(10, { message: 'Mobile number must be at least 10 digits' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters' })
     .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
     .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
@@ -23,7 +21,6 @@ const signupSchema = z.object({
   terms: z.boolean().refine(val => val === true, {
     message: 'You must agree to the terms and conditions',
   }),
-  mobile: z.string().min(10, { message: 'Mobile number must be at least 10 digits' }),
 }).refine(data => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword'],
@@ -52,17 +49,26 @@ const SignupPage = () => {
     defaultValues: {
       name: '',
       email: '',
+      college: '',
+      studentId: '',
+      mobile: '',
       password: '',
       confirmPassword: '',
       terms: false,
-      mobile: '',
     },
   });
 
   const onSubmit = async (data: SignupFormValues) => {
     try {
       setAuthError(null);
-      await signup(data.name, data.email, data.password, data.mobile);
+      await signup(
+        data.name,
+        data.email,
+        data.password,
+        data.mobile,
+        data.college,
+        data.studentId
+      );
       navigate('/dashboard');
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Signup failed. Please try again.';
@@ -119,7 +125,7 @@ const SignupPage = () => {
           {/* Email */}
           <div>
             <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-              College Email <span className="text-red-500">*</span>
+              Email <span className="text-red-500">*</span>
             </label>
             <input
               id="email"
@@ -127,11 +133,48 @@ const SignupPage = () => {
               autoComplete="email"
               required
               className={`mt-0 block w-full rounded-md bg-white text-gray-900 font-semibold shadow-sm border ${errors.email ? 'border-red-500' : 'border-gray-300'} focus:border-orange-700 focus:ring-orange-700 hover:border-orange-500 transition-all duration-200 text-xs sm:text-base px-3 sm:px-4 py-2 sm:py-3 placeholder-gray-400`}
-              placeholder="College Email"
+              placeholder="Email address"
               {...register('email')}
             />
             {errors.email && (
               <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
+            )}
+          </div>
+
+          {/* College Name (Mandatory) */}
+          <div>
+            <label htmlFor="college" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              College / University Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="college"
+              type="text"
+              required
+              className={`mt-0 block w-full rounded-md bg-white text-gray-900 font-semibold shadow-sm border ${errors.college ? 'border-red-500' : 'border-gray-300'} focus:border-orange-700 focus:ring-orange-700 hover:border-orange-500 transition-all duration-200 text-xs sm:text-base px-3 sm:px-4 py-2 sm:py-3 placeholder-gray-400`}
+              placeholder="e.g. Techno India University"
+              {...register('college')}
+            />
+            {errors.college && (
+              <p className="mt-1 text-xs text-red-600">{errors.college.message}</p>
+            )}
+          </div>
+
+          {/* College ID / Student ID */}
+          <div>
+            <label htmlFor="studentId" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+              College ID / Student ID <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="studentId"
+              type="text"
+              required
+              className={`mt-0 block w-full rounded-md bg-white text-gray-900 font-semibold shadow-sm border ${errors.studentId ? 'border-red-500' : 'border-gray-300'} focus:border-orange-700 focus:ring-orange-700 hover:border-orange-500 transition-all duration-200 text-xs sm:text-base px-3 sm:px-4 py-2 sm:py-3 placeholder-gray-400`}
+              placeholder="Enter your college ID, roll no., or reg. no."
+              {...register('studentId')}
+            />
+            <p className="mt-1 text-[11px] text-gray-500">Any format or pattern accepted (e.g. 221001001392, roll number, registration number)</p>
+            {errors.studentId && (
+              <p className="mt-1 text-xs text-red-600">{errors.studentId.message}</p>
             )}
           </div>
 

@@ -65,6 +65,7 @@ const ProfilePage = () => {
     email: user?.email || '',
     mobile: user?.mobile || '',
     college: user?.college || '',
+    studentId: user?.studentId || '',
     department: user?.department || '',
     year: user?.year || '',
     bio: user?.bio || '',
@@ -79,6 +80,7 @@ const ProfilePage = () => {
         email: user.email || '',
         mobile: user.mobile || '',
         college: user.college || '',
+        studentId: user.studentId || '',
         department: user.department || '',
         year: user.year || '',
         bio: user.bio || '',
@@ -141,6 +143,7 @@ const ProfilePage = () => {
         name: formData.name.trim(),
         mobile: sanitizedMobile,
         college: formData.college.trim(),
+        studentId: formData.studentId.trim(),
         department: formData.department.trim(),
         year: formData.year,
         bio: formData.bio.trim(),
@@ -161,6 +164,7 @@ const ProfilePage = () => {
         email: user.email || '',
         mobile: user.mobile || '',
         college: user.college || '',
+        studentId: user.studentId || '',
         department: user.department || '',
         year: user.year || '',
         bio: user.bio || '',
@@ -344,6 +348,12 @@ const ProfilePage = () => {
                         <span className="text-gray-500">College / Campus:</span>
                         <span className="font-semibold text-gray-900 text-right truncate max-w-[200px]">
                           {user?.college || 'Not specified'}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-500">College / Student ID:</span>
+                        <span className="font-semibold text-gray-900 text-right truncate max-w-[200px]">
+                          {user?.studentId || 'Not specified'}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -588,7 +598,26 @@ const ProfilePage = () => {
                         type="text"
                         value={formData.college}
                         onChange={(e) => setFormData({ ...formData, college: e.target.value })}
-                        placeholder="e.g. Delhi Technological University"
+                        placeholder="e.g. Techno India University"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition text-sm font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  {/* College ID / Student ID */}
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1.5">
+                      College ID / Student ID
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+                        <ShieldCheck className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="text"
+                        value={formData.studentId}
+                        onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+                        placeholder="Enter your college ID / Roll number"
                         className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent transition text-sm font-medium"
                       />
                     </div>

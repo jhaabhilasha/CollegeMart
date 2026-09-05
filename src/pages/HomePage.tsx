@@ -177,7 +177,7 @@ const HomePage = () => {
             <div className="animate-fade-in text-center">
               <div className="mx-auto mb-2 sm:mb-4 flex h-12 sm:h-16 w-12 sm:w-16 items-center justify-center rounded-full bg-primary/10 text-xl sm:text-2xl font-bold text-primary">1</div>
               <h3 className="mb-1 sm:mb-2 text-lg sm:text-xl font-semibold">Create an Account</h3>
-              <p className="text-gray-600 text-sm sm:text-base">Sign up with your college email and set up your profile in seconds.</p>
+              <p className="text-gray-600 text-sm sm:text-base">Sign up with your email and set up your profile in seconds.</p>
             </div>
             <div className="animate-fade-in text-center">
               <div className="mx-auto mb-2 sm:mb-4 flex h-12 sm:h-16 w-12 sm:w-16 items-center justify-center rounded-full bg-primary/10 text-xl sm:text-2xl font-bold text-primary">2</div>

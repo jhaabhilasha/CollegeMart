@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Search,
   Menu,
@@ -37,7 +37,16 @@ const Header = () => {
 
   const { token, user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const notifRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const s = params.get('search');
+    if (s !== null) {
+      setSearchQuery(s);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -166,8 +175,25 @@ const Header = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/listings?search=${encodeURIComponent(searchQuery)}`);
+    const trimmed = searchQuery.trim();
+    if (trimmed) {
+      if (location.pathname.startsWith('/notes')) {
+        navigate(`/notes?search=${encodeURIComponent(trimmed)}`);
+      } else {
+        const params = new URLSearchParams(location.search);
+        params.set('search', trimmed);
+        navigate(`/listings?${params.toString()}`);
+      }
+      setMobileMenuOpen(false);
+    } else {
+      if (location.pathname.startsWith('/notes')) {
+        navigate('/notes');
+      } else if (location.pathname.startsWith('/listings')) {
+        const params = new URLSearchParams(location.search);
+        params.delete('search');
+        const q = params.toString();
+        navigate(q ? `/listings?${q}` : '/listings');
+      }
       setMobileMenuOpen(false);
     }
   };
@@ -182,16 +208,52 @@ const Header = () => {
       </div>
 
       <div className="hidden md:flex w-full max-w-md flex-1 items-center justify-center mx-4">
-        <form onSubmit={handleSearch} className="relative w-full">
+        <form onSubmit={handleSearch} className="relative w-full flex items-center">
           <input
             type="text"
-            placeholder="Search for products, books, or more..."
-            className="w-full pl-12 pr-4 py-2 rounded-full bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary shadow text-base transition-all duration-200"
+            placeholder={
+              location.pathname.startsWith('/notes')
+                ? 'Search subjects, topics, or notes...'
+                : 'Search products, textbooks, electronics...'
+            }
+            className="w-full pl-11 pr-10 py-2 rounded-full bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ef6c13] focus:bg-white shadow text-sm transition-all duration-200"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              setSearchQuery(val);
+              if (location.pathname === '/listings') {
+                const params = new URLSearchParams(location.search);
+                if (val.trim()) {
+                  params.set('search', val.trim());
+                } else {
+                  params.delete('search');
+                }
+                const q = params.toString();
+                navigate(q ? `/listings?${q}` : '/listings', { replace: true });
+              }
+            }}
             autoComplete="off"
           />
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-gray-400" />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchQuery('');
+                if (location.pathname.startsWith('/notes')) {
+                  navigate('/notes');
+                } else if (location.pathname.startsWith('/listings')) {
+                  const params = new URLSearchParams(location.search);
+                  params.delete('search');
+                  const q = params.toString();
+                  navigate(q ? `/listings?${q}` : '/listings');
+                }
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 rounded-full transition"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </form>
       </div>
 
@@ -428,16 +490,52 @@ const Header = () => {
         </div>
 
         <div className="p-4 border-b border-gray-200">
-          <form onSubmit={handleSearch} className="relative w-full">
+          <form onSubmit={handleSearch} className="relative w-full flex items-center">
             <input
               type="text"
-              placeholder="Search for products, books, or more..."
-              className="w-full pl-12 pr-4 py-2 rounded-full bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary shadow text-base transition-all duration-200"
+              placeholder={
+                location.pathname.startsWith('/notes')
+                  ? 'Search subjects, topics, or notes...'
+                  : 'Search products, textbooks, electronics...'
+              }
+              className="w-full pl-11 pr-10 py-2.5 rounded-full bg-gray-100 text-gray-800 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#ef6c13] focus:bg-white shadow text-sm transition-all duration-200"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSearchQuery(val);
+                if (location.pathname === '/listings') {
+                  const params = new URLSearchParams(location.search);
+                  if (val.trim()) {
+                    params.set('search', val.trim());
+                  } else {
+                    params.delete('search');
+                  }
+                  const q = params.toString();
+                  navigate(q ? `/listings?${q}` : '/listings', { replace: true });
+                }
+              }}
               autoComplete="off"
             />
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-gray-400" />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery('');
+                  if (location.pathname.startsWith('/notes')) {
+                    navigate('/notes');
+                  } else if (location.pathname.startsWith('/listings')) {
+                    const params = new URLSearchParams(location.search);
+                    params.delete('search');
+                    const q = params.toString();
+                    navigate(q ? `/listings?${q}` : '/listings');
+                  }
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 rounded-full transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </form>
         </div>
 
