@@ -34,6 +34,10 @@ exports.signup = async (req, res, next) => {
         email: user.email,
         role: user.role || 'user',
         mobile: user.mobile,
+        bio: user.bio || '',
+        college: user.college || '',
+        year: user.year || '',
+        department: user.department || '',
         isEmailVerified: user.isEmailVerified,
         profileImage: user.profileImage || null,
       },
@@ -79,6 +83,10 @@ exports.login = async (req, res, next) => {
         email: user.email,
         role: user.role || 'user',
         mobile: user.mobile,
+        bio: user.bio || '',
+        college: user.college || '',
+        year: user.year || '',
+        department: user.department || '',
         isEmailVerified: user.isEmailVerified,
         profileImage: user.profileImage || null,
       },
@@ -266,6 +274,10 @@ exports.loginWithOtp = async (req, res) => {
         email: user.email,
         role: user.role || 'user',
         mobile: user.mobile,
+        bio: user.bio || '',
+        college: user.college || '',
+        year: user.year || '',
+        department: user.department || '',
         isEmailVerified: user.isEmailVerified,
         profileImage: user.profileImage || null,
       },
@@ -273,6 +285,31 @@ exports.loginWithOtp = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: 'OTP login failed' });
+  }
+};
+
+// Get Current User (Session / Profile check)
+exports.getCurrentUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id || req.user._id).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json({
+      user: {
+        id: user._id,
+        name: user.username,
+        email: user.email,
+        role: user.role || 'user',
+        mobile: user.mobile,
+        bio: user.bio || '',
+        college: user.college || '',
+        year: user.year || '',
+        department: user.department || '',
+        isEmailVerified: user.isEmailVerified,
+        profileImage: user.profileImage || null,
+      }
+    });
+  } catch (err) {
+    next(err);
   }
 };
 

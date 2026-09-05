@@ -180,7 +180,7 @@ const DashboardPage = () => {
                     </div>
                     <p className="text-gray-600 text-sm sm:text-base">Manage your active and past listings.</p>
                   </Link>
-                  <Link to="/profile" className="rounded-2xl bg-purple-50 p-4 sm:p-6 shadow hover:shadow-lg transition group border-2 border-purple-100">
+                  <Link to="/profile" state={{ edit: true }} className="rounded-2xl bg-purple-50 p-4 sm:p-6 shadow hover:shadow-lg transition group border-2 border-purple-100">
                     <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
                       <Edit3 className="text-secondary" />
                       <span className="font-semibold text-base sm:text-lg text-secondary group-hover:underline">Edit Profile</span>
@@ -275,18 +275,30 @@ const DashboardPage = () => {
                   Seller ({userListings.length})
                 </button>
               </div>
-              <div className="w-full mt-2 sm:mt-4">
-                <div className="mb-2 sm:mb-4">
+              <div className="w-full mt-2 sm:mt-4 space-y-3">
+                {user?.college && (
+                  <div>
+                    <span className="block text-xs text-gray-500">Campus</span>
+                    <span className="text-sm font-semibold text-gray-800 line-clamp-1">{user.college}</span>
+                  </div>
+                )}
+                <div>
                   <span className="block text-xs sm:text-sm text-gray-500">Listings</span>
                   <span className="text-base sm:text-lg font-bold text-gray-900">{userListings.length}</span>
-                </div>
-                <div className="mb-2 sm:mb-4">
-                  <span className="block text-xs sm:text-sm text-gray-500">Messages</span>
-                  <span className="text-base sm:text-lg font-bold text-gray-900">--</span>
                 </div>
                 <div>
                   <span className="block text-xs sm:text-sm text-gray-500">Member since</span>
                   <span className="text-base sm:text-lg font-bold text-gray-900">2025</span>
+                </div>
+                <div className="pt-2">
+                  <Link
+                    to="/profile"
+                    state={{ edit: true }}
+                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-orange-50 hover:bg-orange-100 text-orange-700 font-bold text-xs border border-orange-200 transition hover:scale-102 shadow-sm"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>Edit Profile</span>
+                  </Link>
                 </div>
               </div>
             </aside>

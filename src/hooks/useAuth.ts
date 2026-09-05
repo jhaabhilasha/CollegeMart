@@ -10,6 +10,10 @@ export interface User {
   profileImage?: string | null;
   role: 'user' | 'admin';
   mobile: string;
+  bio?: string;
+  college?: string;
+  year?: string;
+  department?: string;
   isEmailVerified?: boolean;
 }
 
@@ -243,13 +247,18 @@ export const useAuth = create<AuthState>()(
           }
 
           // Call backend user update endpoint
+          const payload: any = { ...userData };
+          if (userData.name && !payload.username) {
+            payload.username = userData.name;
+          }
+
           const res = await fetch(`/api/users/${currentUser.id}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify(payload)
           });
 
           if (!res.ok) {
@@ -261,10 +270,14 @@ export const useAuth = create<AuthState>()(
           
           const updatedUser: User = {
             ...currentUser,
-            name: updatedData.username || currentUser.name,
+            name: updatedData.username || updatedData.name || currentUser.name,
             email: updatedData.email || currentUser.email,
             mobile: updatedData.mobile || currentUser.mobile,
-            profileImage: updatedData.profileImage ?? currentUser.profileImage,
+            profileImage: updatedData.profileImage !== undefined ? updatedData.profileImage : currentUser.profileImage,
+            bio: updatedData.bio !== undefined ? updatedData.bio : currentUser.bio,
+            college: updatedData.college !== undefined ? updatedData.college : currentUser.college,
+            year: updatedData.year !== undefined ? updatedData.year : currentUser.year,
+            department: updatedData.department !== undefined ? updatedData.department : currentUser.department,
           };
           
           set({ 
