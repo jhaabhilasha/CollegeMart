@@ -136,7 +136,7 @@ async function seed() {
       category: 'Appliances',
       condition: 'Good',
       location: 'Main Library 2nd Floor',
-      images: ['https://images.unsplash.com/photo-1534948216015-843149f72be3?w=600&auto=format&fit=crop&q=80'],
+      images: ['https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=600&auto=format&fit=crop&q=80'],
       ownerId: user._id,
       ownerName: user.username,
       status: 'active',
