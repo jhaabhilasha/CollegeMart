@@ -11,7 +11,7 @@ import { fetchWithAuth } from '../../lib/api';
 const navLinks = [
   { label: 'Dashboard', icon: User, to: '/dashboard' },
   { label: 'Profile', icon: Edit3, to: '/profile' },
-  { label: 'My Listings', icon: ShoppingBag, to: '/listings' },
+  { label: 'My Listings', icon: ShoppingBag, to: '#my-listings' },
   { label: 'Post Listing', icon: ShoppingBag, to: '/listings/create' },
 ];
 
@@ -21,6 +21,7 @@ const DashboardPage = () => {
   const { userListings, getUserListings, isLoading } = useListings();
   const [unreadCount, setUnreadCount] = useState(0);
   const [showStudentModal, setShowStudentModal] = useState(false);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'listings'>('dashboard');
 
   useEffect(() => {
     getUserListings();
@@ -31,23 +32,51 @@ const DashboardPage = () => {
       .catch(() => setUnreadCount(0));
   }, [getUserListings]);
 
+  // Track scroll position to update active indicator between Dashboard and My Listings
+  useEffect(() => {
+    const handleScroll = () => {
+      const listingsEl = document.getElementById('my-listings');
+      if (listingsEl) {
+        const rect = listingsEl.getBoundingClientRect();
+        if (rect.top <= 250) {
+          setActiveTab('listings');
+        } else {
+          setActiveTab('dashboard');
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
-  // Helper to prevent navigation if already on dashboard
-  const handleNavClick = (e: React.MouseEvent, to: string) => {
-    if (to === '/dashboard' && window.location.pathname === '/dashboard') {
-      e.preventDefault();
+  // Click handler for sidebar navigation items
+  const handleNavClick = (to: string) => {
+    if (to === '/dashboard') {
+      setActiveTab('dashboard');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (to === '#my-listings') {
+      setActiveTab('listings');
+      const el = document.getElementById('my-listings');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        navigate('/listings');
+      }
+    } else {
+      navigate(to);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex flex-col">
       <div className="w-full max-w-7xl mx-auto flex flex-col flex-1">
-        {/* Dashboard Navbar */}
-        <header className="w-full flex flex-row items-center justify-between px-4 sm:px-10 py-4 sm:py-6 bg-white shadow-lg border-b border-orange-100 z-30 flex-nowrap">
+        {/* Dashboard Navbar - Sticky Top */}
+        <header className="w-full flex flex-row items-center justify-between px-4 sm:px-10 py-4 sm:py-5 bg-white/95 backdrop-blur-md shadow-md border-b border-orange-100 z-30 flex-nowrap sticky top-0">
           <div className="flex items-center gap-2 sm:gap-4 flex-nowrap">
             <Avatar src={user?.profileImage} alt={user?.name} size="md" />
             <span className="text-xl sm:text-2xl font-bold text-gray-900">Welcome, {user?.name?.split(' ')[0] || 'Student'}</span>
@@ -69,27 +98,34 @@ const DashboardPage = () => {
             </button>
           </div>
         </header>
-        <div className="flex flex-col md:flex-row flex-1">
-          {/* Sidebar */}
-          <aside className="hidden md:flex flex-col items-center gap-4 bg-white border-r border-orange-100 py-6 sm:py-10 px-2 sm:px-4 min-w-[80px] sm:min-w-[100px] rounded-tr-3xl rounded-br-3xl shadow-lg">
-            <Avatar src={user?.profileImage} alt={user?.name} size="md" className="mb-4" />
-            <nav className="flex flex-col gap-4 sm:gap-6 mt-4 sm:mt-8 w-full">
-              {/* Remove Messages from navLinks */}
-              {navLinks.filter(link => link.label !== 'Messages').map(link => {
+        <div className="flex flex-col md:flex-row flex-1 relative">
+          {/* Static Sticky Sidebar - Stays fixed in place when scrolling */}
+          <aside className="hidden md:flex flex-col items-center gap-4 bg-white border-r border-orange-100 py-6 sm:py-8 px-2 sm:px-3 min-w-[80px] sm:min-w-[96px] rounded-3xl shadow-lg sticky top-24 self-start z-20">
+            <Link to="/profile" className="group block mb-1" title="View Profile">
+              <Avatar src={user?.profileImage} alt={user?.name} size="md" className="transition-transform group-hover:scale-110 group-hover:ring-2 ring-orange-400 cursor-pointer" />
+            </Link>
+            <nav className="flex flex-col gap-3 sm:gap-4 mt-2 w-full">
+              {navLinks.map((link) => {
                 const Icon = link.icon;
+                const isSelected =
+                  (link.to === '/dashboard' && activeTab === 'dashboard') ||
+                  (link.to === '#my-listings' && activeTab === 'listings');
+
                 return (
-                  <NavLink
+                  <button
                     key={link.label}
-                    to={link.to}
-                    onClick={e => handleNavClick(e, link.to)}
-                    className={({ isActive }) =>
-                      `group flex flex-col items-center py-2 sm:py-3 rounded-2xl transition cursor-pointer w-full text-base sm:text-lg font-semibold ${isActive ? 'bg-gradient-to-r from-orange-100 to-orange-200 text-primary shadow pointer-events-none opacity-70' : 'text-gray-400 hover:text-primary hover:bg-orange-50'}`
-                    }
+                    type="button"
+                    onClick={() => handleNavClick(link.to)}
+                    className={`group flex flex-col items-center py-2.5 sm:py-3 px-1 rounded-2xl transition-all duration-200 cursor-pointer w-full font-semibold select-none ${
+                      isSelected
+                        ? 'bg-gradient-to-r from-orange-100 to-orange-200 text-orange-700 shadow-sm font-bold scale-105'
+                        : 'text-gray-400 hover:text-orange-600 hover:bg-orange-50 hover:scale-105'
+                    }`}
                     title={link.label}
                   >
-                    <Icon className="h-6 sm:h-7 w-6 sm:w-7 mb-1 transition group-hover:scale-110" />
-                    <span className="text-xs">{link.label}</span>
-                  </NavLink>
+                    <Icon className="h-6 sm:h-7 w-6 sm:w-7 mb-1 transition-transform group-hover:scale-110" />
+                    <span className="text-xs text-center">{link.label}</span>
+                  </button>
                 );
               })}
             </nav>
@@ -214,7 +250,7 @@ const DashboardPage = () => {
             </section>
 
             {/* Right: Profile Card */}
-            <aside className="w-full md:w-80 bg-white rounded-3xl shadow-xl p-6 sm:p-10 flex flex-col items-center border-2 border-orange-100 animate-fade-in animate-slide-up mt-4 md:mt-0">
+            <aside className="w-full md:w-80 bg-white rounded-3xl shadow-xl p-6 sm:p-10 flex flex-col items-center border-2 border-orange-100 animate-fade-in animate-slide-up mt-4 md:mt-0 xl:sticky xl:top-24 xl:self-start">
               <Avatar src={user?.profileImage} alt={user?.name} size="xl" />
               <h2 className="mt-2 sm:mt-4 text-xl sm:text-2xl font-bold text-gray-900">{user?.name}</h2>
               <p className="text-gray-500 mb-1 sm:mb-2">{user?.mobile}</p>
