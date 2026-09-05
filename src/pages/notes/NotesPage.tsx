@@ -184,14 +184,7 @@ const WHATSAPP_LINK = `https://wa.me/91${CONTACT_PHONE}?text=Hi%20Abhilasha,%20I
 const NotesPage: React.FC = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState<'all' | 'Sem 3' | 'Sem 4' | 'Sem 5' | 'lab'>('all');
-  const [showContactModal, setShowContactModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleContactClick = () => {
-    // Open WhatsApp in new tab and show contact modal
-    window.open(WHATSAPP_LINK, '_blank');
-    setShowContactModal(true);
-  };
 
   const filteredNotes =
     selectedTab === 'all'
@@ -286,24 +279,15 @@ const NotesPage: React.FC = () => {
           </button>
 
           {/* Contact (with WhatsApp icon) */}
-          <div className="pt-3 pb-1 px-4 text-[11px] font-semibold uppercase tracking-wider text-red-200/80">
-            Get in Touch
-          </div>
-
-          <button
-            type="button"
-            onClick={handleContactClick}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow transition hover:scale-102 cursor-pointer"
-            title={`Contact: ${CONTACT_PHONE}`}
+          <a
+            href="https://wa.me/918757313099"
+            target="_blank"
+            rel="noreferrer"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm text-red-100 hover:bg-white/10 hover:text-white transition"
           >
-            <div className="flex items-center gap-2.5">
-              <MessageCircle className="w-5 h-5" />
-              <span>Contact</span>
-            </div>
-            <span className="text-xs bg-white/20 px-2 py-0.5 rounded-md font-mono">
-              {CONTACT_PHONE}
-            </span>
-          </button>
+            <MessageCircle className="w-5 h-5" />
+            <span>Contact</span>
+          </a>
         </nav>
 
         {/* Sidebar Footer */}
@@ -341,13 +325,15 @@ const NotesPage: React.FC = () => {
             </span>
           </div>
 
-          <button
-            onClick={() => setShowContactModal(true)}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold text-xs border border-emerald-200 transition cursor-pointer"
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold text-xs border border-emerald-200 transition"
           >
             <MessageCircle className="w-4 h-4 text-emerald-600" />
             <span>WhatsApp: {CONTACT_PHONE}</span>
-          </button>
+          </a>
         </div>
 
         {/* Content Container */}
@@ -404,13 +390,15 @@ const NotesPage: React.FC = () => {
                       <h4 className="text-base font-bold text-gray-900 mb-1">{lab.title}</h4>
                       <p className="text-xs text-gray-500 leading-relaxed mb-4">{lab.desc}</p>
                     </div>
-                    <button
-                      onClick={handleContactClick}
+                    <a
+                      href={WHATSAPP_LINK}
+                      target="_blank"
+                      rel="noreferrer"
                       className="inline-flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs border border-red-200 transition"
                     >
                       <MessageCircle className="w-4 h-4 text-emerald-600" />
                       <span>Request Lab Codes ({CONTACT_PHONE})</span>
-                    </button>
+                    </a>
                   </div>
                 ))}
               </div>
@@ -486,77 +474,6 @@ const NotesPage: React.FC = () => {
           )}
         </div>
       </main>
-
-      {/* ================= CONTACT MODAL ================= */}
-      {showContactModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 w-full max-w-md relative border border-red-100 animate-slide-up text-center">
-            <button
-              onClick={() => setShowContactModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl p-1 leading-none cursor-pointer"
-            >
-              &times;
-            </button>
-
-            <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-inner">
-              <MessageCircle className="w-8 h-8" />
-            </div>
-
-            <h3 className="text-2xl font-extrabold text-gray-900 mb-1">Contact for Notes</h3>
-            <p className="text-xs text-emerald-600 font-semibold uppercase tracking-wider mb-4">
-              Verified Campus Helpline
-            </p>
-
-            {/* Direct Contact Card */}
-            <div className="bg-emerald-50/60 rounded-2xl p-5 border border-emerald-100 text-left space-y-3 mb-6">
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500 font-medium">WhatsApp / Mobile:</span>
-                <span className="font-extrabold text-base text-gray-900 tracking-wide font-mono">
-                  +91 {CONTACT_PHONE}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500 font-medium">Contact Person:</span>
-                <span className="font-bold text-sm text-gray-900">Abhilasha Jha</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500 font-medium">Status:</span>
-                <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Active & Available
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2.5">
-              <a
-                href={WHATSAPP_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow transition"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Chat on WhatsApp (+91 {CONTACT_PHONE})</span>
-              </a>
-
-              <a
-                href={`tel:+91${CONTACT_PHONE}`}
-                className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-sm transition"
-              >
-                <Phone className="w-4 h-4 text-gray-600" />
-                <span>Direct Call ({CONTACT_PHONE})</span>
-              </a>
-
-              <button
-                type="button"
-                onClick={() => setShowContactModal(false)}
-                className="w-full py-2 text-xs text-gray-400 hover:text-gray-600 font-medium"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
