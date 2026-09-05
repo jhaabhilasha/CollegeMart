@@ -1,3 +1,5 @@
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -20,16 +22,23 @@ const app = express();
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// CORS configuration - use ALLOWED_ORIGINS env variable in production
-const allowedOrigins = process.env.ALLOWED_ORIGINS 
-  ? process.env.ALLOWED_ORIGINS.split(',') 
-  : ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'];
+// CORS configuration - allow localhost in dev, onrender/configured origins in production
+const defaultOrigins = ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:3000'];
+const configuredOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()) 
+  : [];
 
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
+    // Allow requests with no origin (mobile apps, curl, server-to-server)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    if (
+      configuredOrigins.includes(origin) ||
+      defaultOrigins.includes(origin) ||
+      origin.includes('onrender.com') ||
+      origin.includes('vercel.app') ||
+      !process.env.ALLOWED_ORIGINS
+    ) {
       return callback(null, true);
     }
     return callback(new Error('Not allowed by CORS'), false);
@@ -37,7 +46,6 @@ app.use(cors({
   credentials: true
 }));
 
-const path = require('path');
 const fs = require('fs');
 
 app.use(helmet({ contentSecurityPolicy: false }));
@@ -109,7 +117,19 @@ app.use(require('./middleware/errorHandler'));
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
+    origin: function(origin, callback) {
+      if (!origin) return callback(null, true);
+      if (
+        configuredOrigins.includes(origin) ||
+        defaultOrigins.includes(origin) ||
+        origin.includes('onrender.com') ||
+        origin.includes('vercel.app') ||
+        !process.env.ALLOWED_ORIGINS
+      ) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'), false);
+    },
     methods: ['GET', 'POST'],
     credentials: true
   }
