@@ -149,7 +149,7 @@ async function seed() {
       category: 'Appliances',
       condition: 'Good',
       location: 'Campus South Gate',
-      images: ['https://images.unsplash.com/photo-1588854337236-6889d631faa8?w=600&auto=format&fit=crop&q=80'],
+      images: ['https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop&q=80'],
       ownerId: user._id,
       ownerName: user.username,
       status: 'active',
