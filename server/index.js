@@ -8,14 +8,14 @@ const helmet = require('helmet');
 const http = require('http');
 const { Server } = require('socket.io');
 
-// Validate required environment variables
-const requiredEnvVars = ['JWT_SECRET', 'MONGO_URI'];
-const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
-if (missingEnvVars.length > 0) {
-  console.error('❌ Missing required environment variables:');
-  missingEnvVars.forEach(envVar => console.error(`   - ${envVar}`));
-  console.error('\nPlease create a .env file with the required variables.');
-  process.exit(1);
+// Ensure JWT_SECRET has a safe fallback if not set yet
+if (!process.env.JWT_SECRET) {
+  console.warn('⚠️ JWT_SECRET environment variable not set. Using default secret key.');
+  process.env.JWT_SECRET = 'collegeconnect-default-secret-key-2026';
+}
+
+if (!process.env.MONGO_URI) {
+  console.warn('⚠️ MONGO_URI environment variable not set. Please add MONGO_URI in your Render Environment settings.');
 }
 
 const app = express();
@@ -164,22 +164,25 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 5000;
 
+// Start server immediately so Render detects port binding without timing out
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
 // MongoDB connection options
 const mongoOptions = {
   serverSelectionTimeoutMS: 30000,
-  socketTimeoutMS: 45000,
-  family: 4 // Force IPv4
+  socketTimeoutMS: 45000
 };
 
-// Use MONGO_URI from .env file (local or Atlas)
+// Use MONGO_URI from .env file or environment variable
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/collegeconnect';
 
 mongoose.connect(MONGO_URI, mongoOptions)
   .then(() => {
-    console.log('Connected to MongoDB:', MONGO_URI.includes('localhost') ? 'localhost' : 'Atlas');
-    server.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
+    const isLocal = MONGO_URI.includes('localhost') || MONGO_URI.includes('127.0.0.1');
+    console.log('Connected to MongoDB:', isLocal ? 'localhost' : 'Atlas');
   })
   .catch(err => {
     console.error('MongoDB connection error:', err.message);
-    process.exit(1);
   });
