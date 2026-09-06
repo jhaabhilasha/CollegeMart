@@ -88,6 +88,16 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/listings', require('./routes/listings'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/messages', require('./routes/messages'));
+app.all('/api/seed-abhilasha', async (req, res) => {
+  try {
+    await seedAbhilashaData();
+    const Listing = require('./models/listing');
+    const count = await Listing.countDocuments();
+    res.json({ success: true, message: 'Seeded successfully', totalListings: count });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 // Non-API routes: serve frontend SPA or friendly status page instead of "Cannot GET /"
 app.use((req, res, next) => {
@@ -180,10 +190,46 @@ const mongoOptions = {
 // Use MONGO_URI from .env file or environment variable
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/collegeconnect';
 
+async function seedAbhilashaData() {
+  try {
+    const User = require('./models/user');
+    const Listing = require('./models/listing');
+    const seedFilePath = path.join(__dirname, 'abhilasha_seed.json');
+    if (!fs.existsSync(seedFilePath)) return;
+    const seedData = JSON.parse(fs.readFileSync(seedFilePath, 'utf8'));
+
+    // 1. Ensure user exists
+    let user = await User.findOne({ email: seedData.user.email });
+    if (!user) {
+      user = await User.create(seedData.user);
+      console.log('✅ Seeded Abhilasha user account in MongoDB');
+    } else {
+      user.college = 'Techno India University';
+      user.studentId = '221001001392';
+      await user.save();
+    }
+
+    // 2. Ensure listings exist
+    const listingCount = await Listing.countDocuments();
+    if (listingCount === 0) {
+      const listingsToInsert = seedData.listings.map(l => ({
+        ...l,
+        ownerId: user._id,
+        ownerName: user.username || 'Abhilasha'
+      }));
+      await Listing.insertMany(listingsToInsert);
+      console.log(`✅ Seeded ${listingsToInsert.length} listings for Abhilasha in MongoDB`);
+    }
+  } catch (err) {
+    console.error('Error during seedAbhilashaData:', err.message);
+  }
+}
+
 mongoose.connect(MONGO_URI, mongoOptions)
-  .then(() => {
+  .then(async () => {
     const isLocal = MONGO_URI.includes('localhost') || MONGO_URI.includes('127.0.0.1');
     console.log('Connected to MongoDB:', isLocal ? 'localhost' : 'Atlas');
+    await seedAbhilashaData();
   })
   .catch(err => {
     console.error('MongoDB connection error:', err.message);

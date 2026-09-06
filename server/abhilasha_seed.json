@@ -1,0 +1,400 @@
+{
+  "user": {
+    "_id": "6a9414dac6330109475b5bf8",
+    "username": "Abhilasha",
+    "password": "$2b$10$nXcYnSL63naXA1UYts/4NeJ7gkl7EQhabtjC6ylV8skkXC4NEJ0D6",
+    "email": "jhaaabhilasha553@gmail.com",
+    "mobile": "8757313099",
+    "role": "user",
+    "isEmailVerified": false,
+    "__v": 0,
+    "emailVerificationExpires": "2026-08-31T11:32:42.717Z",
+    "emailVerificationToken": "dd85b36cf24ab9b47e51949314a60e6680060162c7fbb662acdc0c78c205d8e4",
+    "bio": "",
+    "college": "Techno India University",
+    "department": "",
+    "studentId": "221001001392",
+    "year": ""
+  },
+  "listings": [
+    {
+      "_id": "6a9c01431d2fccdd3b295c1e",
+      "title": "Introduction to Algorithms (CLRS 3rd Edition)",
+      "description": "Standard computer science algorithms textbook. Clean pages with minimal pencil highlights. Essential for data structures & algorithms coursework.",
+      "price": 650,
+      "category": "Textbooks",
+      "condition": "Like New",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Central Campus Library",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": true,
+      "createdAt": "2026-09-05T11:47:15.200Z",
+      "updatedAt": "2026-09-05T11:47:15.200Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c21",
+      "title": "Higher Engineering Mathematics by B.S. Grewal",
+      "description": "Comprehensive engineering mathematics reference book in excellent condition. Covered in plastic film, no torn pages.",
+      "price": 450,
+      "category": "Textbooks",
+      "condition": "Good",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Engineering Block 3",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T11:47:15.233Z",
+      "updatedAt": "2026-09-05T11:47:15.233Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c24",
+      "title": "Casio fx-991EX Scientific Calculator (ClassWiz)",
+      "description": "High-speed scientific calculator with spreadsheet functions. Required for semester engineering and mathematics exams. Includes original protective slide-on case.",
+      "price": 890,
+      "category": "Electronics",
+      "condition": "Like New",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1611125832047-1d7ad1e8e48f?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Hostel Block A",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": true,
+      "createdAt": "2026-09-05T11:47:15.238Z",
+      "updatedAt": "2026-09-05T11:47:15.238Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c27",
+      "title": "Logitech M221 Silent Wireless Mouse",
+      "description": "Smooth 2.4GHz wireless connection, 90% noise reduction, ideal for library and late-night hostel study sessions. Comes with fresh AA battery.",
+      "price": 499,
+      "category": "Electronics",
+      "condition": "Like New",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Student Activity Center",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T11:47:15.242Z",
+      "updatedAt": "2026-09-05T11:47:15.242Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c2a",
+      "title": "College Connect Varsity Fleece Hoodie (Navy Blue - Unisex L)",
+      "description": "Warm, high-quality fleece hoodie with college emblem patch. Super comfortable for winter campus mornings and AC lecture halls.",
+      "price": 550,
+      "category": "Clothing",
+      "condition": "Like New",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Girls Hostel 2",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T11:47:15.246Z",
+      "updatedAt": "2026-09-05T11:47:15.246Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c2d",
+      "title": "Formal College Presentation Blazer (Size 38)",
+      "description": "Slim-fit charcoal grey blazer, perfect for placement interviews, technical presentations, and college fests. Dry-cleaned and ready to wear.",
+      "price": 999,
+      "category": "Clothing",
+      "condition": "Good",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Hostel Block B",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": true,
+      "createdAt": "2026-09-05T11:47:15.249Z",
+      "updatedAt": "2026-09-05T11:47:15.249Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c30",
+      "title": "Pigeon 1.5L Stainless Steel Electric Kettle",
+      "description": "Fast boiling 1500W electric kettle with auto-cutoff. Perfect for noodles, coffee, and tea in hostel rooms. Fully tested and clean.",
+      "price": 520,
+      "category": "Appliances",
+      "condition": "Like New",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1594213114663-d94db9b17125?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Hostel Mess Area",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": true,
+      "createdAt": "2026-09-05T11:47:15.253Z",
+      "updatedAt": "2026-09-05T11:47:15.253Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c33",
+      "title": "Rechargeable LED Desk Study Lamp with Phone Stand",
+      "description": "3 brightness levels with eye-protection warm light. Flexible neck and built-in rechargeable battery that lasts up to 6 hours during power cuts.",
+      "price": 340,
+      "category": "Appliances",
+      "condition": "Good",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Main Library 2nd Floor",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T11:47:15.258Z",
+      "updatedAt": "2026-09-05T11:47:15.258Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c36",
+      "title": "Bajaj 2000W Induction Cooktop",
+      "description": "Lightly used for one semester in PG accommodation. Preset cooking menus, energy-saving, flame-free. Comes with box.",
+      "price": 1350,
+      "category": "Appliances",
+      "condition": "Good",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Campus South Gate",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T11:47:15.262Z",
+      "updatedAt": "2026-09-05T11:47:15.262Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c39",
+      "title": "Database Management Systems (DBMS) Handwritten Notes",
+      "description": "Complete syllabus handwritten notes covering SQL, Normalization (1NF to BCNF), Transactions, Concurrency Control, and Indexing. Scoring notes from topper.",
+      "price": 180,
+      "category": "Notes",
+      "condition": "Like New",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "CS Department Cafeteria",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": true,
+      "createdAt": "2026-09-05T11:47:15.265Z",
+      "updatedAt": "2026-09-05T11:47:15.265Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c3c",
+      "title": "Operating Systems & System Design Quick Revision Booklet",
+      "description": "Short summaries of process scheduling, deadlocks, virtual memory, and page replacement algorithms with diagram explanations.",
+      "price": 150,
+      "category": "Notes",
+      "condition": "Good",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Central Library Hall",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T11:47:15.272Z",
+      "updatedAt": "2026-09-05T11:47:15.272Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c3f",
+      "title": "Solved Semester PYQ Papers (2019 - 2025) All Subjects",
+      "description": "Compilation of university previous year exam papers with step-by-step solved answers, recurring questions highlighted, and marking scheme tips.",
+      "price": 220,
+      "category": "PYQ",
+      "condition": "Good",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Student Union Lounge",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": true,
+      "createdAt": "2026-09-05T11:47:15.278Z",
+      "updatedAt": "2026-09-05T11:47:15.278Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c01431d2fccdd3b295c42",
+      "title": "Data Structures & Algorithms PYQ Booklet with Code Solutions",
+      "description": "Comprehensive 5-year question bank with C++ and Java code solutions, time complexities, and gate exam reference hints.",
+      "price": 190,
+      "category": "PYQ",
+      "condition": "Like New",
+      "status": "active",
+      "images": [
+        "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&auto=format&fit=crop&q=80"
+      ],
+      "location": "Campus Canteen",
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T11:47:15.281Z",
+      "updatedAt": "2026-09-05T11:47:15.281Z",
+      "__v": 0
+    },
+    {
+      "_id": "6a9c618328a83b2684f439c0",
+      "title": "boAt Rockerz 450 Bluetooth On-Ear Headphones (Matte Black)",
+      "description": "Up to 15 hours battery backup, 40mm dynamic drivers, padded ear cushions. Clean sound and powerful bass. Comes with aux cable and box.",
+      "price": 799,
+      "category": "Electronics",
+      "condition": "Like New",
+      "location": "Student Center / North Canteen",
+      "images": [
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=600&auto=format&fit=crop&q=80"
+      ],
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "status": "active",
+      "isFeatured": true,
+      "createdAt": "2026-09-05T18:37:55.443Z",
+      "updatedAt": "2026-09-05T18:37:55.443Z"
+    },
+    {
+      "_id": "6a9c618328a83b2684f439c1",
+      "title": "AmazonBasics Ergonomic Aluminum Laptop Stand (Silver)",
+      "description": "Sturdy metallic laptop riser with silicone anti-slip pads. Keeps laptop cool and elevates screen to eye level. Supports 11-inch to 17-inch laptops.",
+      "price": 480,
+      "category": "Electronics",
+      "condition": "Good",
+      "location": "Girls Hostel Block A",
+      "images": [
+        "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=600&auto=format&fit=crop&q=80"
+      ],
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "status": "active",
+      "isFeatured": true,
+      "createdAt": "2026-09-05T18:37:55.443Z",
+      "updatedAt": "2026-09-05T18:37:55.443Z"
+    },
+    {
+      "_id": "6a9c618328a83b2684f439c2",
+      "title": "Fastrack Sturdy Campus College Backpack (Navy Blue - 32L)",
+      "description": "Durable 3-compartment water-resistant backpack with padded 15.6 inch laptop sleeve, bottle holders, and rain cover included.",
+      "price": 590,
+      "category": "Clothing",
+      "condition": "Good",
+      "location": "Central Campus Gate",
+      "images": [
+        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&auto=format&fit=crop&q=80"
+      ],
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "status": "active",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T18:37:55.443Z",
+      "updatedAt": "2026-09-05T18:37:55.443Z"
+    },
+    {
+      "_id": "6a9c618328a83b2684f439c3",
+      "title": "Computer Networks (5th Edition) by Andrew S. Tanenbaum",
+      "description": "The definitive textbook for computer networking, protocol layers, socket programming, and security. Very well preserved, perfect for 5th semester exam prep.",
+      "price": 520,
+      "category": "Textbooks",
+      "condition": "Like New",
+      "location": "Computer Science Department",
+      "images": [
+        "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&auto=format&fit=crop&q=80"
+      ],
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "status": "active",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T18:37:55.443Z",
+      "updatedAt": "2026-09-05T18:37:55.443Z"
+    },
+    {
+      "_id": "6a9c618328a83b2684f439c4",
+      "title": "Engineering Mini Drafter with Sheet Clips and Scale Set",
+      "description": "Omega mini drafter with stainless steel rod, clamping knob, and protector. Used for 1st year Engineering Graphics. Works smoothly without any misalignment.",
+      "price": 390,
+      "category": "Appliances",
+      "condition": "Good",
+      "location": "Mechanical Workshop Block",
+      "images": [
+        "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=600&auto=format&fit=crop&q=80"
+      ],
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "status": "active",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T18:37:55.443Z",
+      "updatedAt": "2026-09-05T18:37:55.443Z"
+    },
+    {
+      "_id": "6a9c618328a83b2684f439c5",
+      "title": "Yonex GR 303 Badminton Racket Duo with Nylon Shuttles",
+      "description": "Pair of lightweight aluminum alloy racquets with grip wrap and full carrying cover. Perfect for evening games at the campus sports complex.",
+      "price": 490,
+      "category": "Clothing",
+      "condition": "Good",
+      "location": "Campus Sports Complex",
+      "images": [
+        "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=600&auto=format&fit=crop&q=80"
+      ],
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "status": "active",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T18:37:55.443Z",
+      "updatedAt": "2026-09-05T18:37:55.443Z"
+    },
+    {
+      "_id": "6a9c618328a83b2684f439c6",
+      "title": "Milton Thermosteel Flip Lid Insulated Water Bottle (1000ml)",
+      "description": "Double-walled vacuum insulated flask. Keeps tea or coffee warm for 18 hours and cold water chilled for 24 hours. Food-grade 18/8 stainless steel.",
+      "price": 360,
+      "category": "Appliances",
+      "condition": "Like New",
+      "location": "Main Library 1st Floor",
+      "images": [
+        "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=600&auto=format&fit=crop&q=80"
+      ],
+      "ownerId": "6a9414dac6330109475b5bf8",
+      "ownerName": "Abhilasha",
+      "status": "active",
+      "isFeatured": false,
+      "createdAt": "2026-09-05T18:37:55.443Z",
+      "updatedAt": "2026-09-05T18:37:55.443Z"
+    }
+  ]
+}
