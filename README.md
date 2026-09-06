@@ -2,10 +2,15 @@
 
 A marketplace platform exclusively for college students to buy, sell, and connect on campus.
 
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-collegemart--g4yl.onrender.com-brightgreen?style=for-the-badge)](https://collegemart-g4yl.onrender.com)
+
+**🔗 Live Website:** [https://collegemart-g4yl.onrender.com](https://collegemart-g4yl.onrender.com)
+
 ![React](https://img.shields.io/badge/React-18.3-blue)
 ![Node.js](https://img.shields.io/badge/Node.js-Express-green)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
+![Deployment](https://img.shields.io/badge/Render-Live-success)
 
 ## Features ✨
 
