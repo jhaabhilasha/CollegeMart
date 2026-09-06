@@ -198,15 +198,35 @@ async function seedAbhilashaData() {
     if (!fs.existsSync(seedFilePath)) return;
     const seedData = JSON.parse(fs.readFileSync(seedFilePath, 'utf8'));
 
-    // 1. Ensure user exists
-    let user = await User.findOne({ email: seedData.user.email });
+    // 1. Ensure user exists with proper single-hashed password
+    let user = await User.findOne({
+      $or: [
+        { email: 'jhaaabhilasha553@gmail.com' },
+        { email: 'jhaabhilasha553@gmail.com' },
+        { mobile: '8757313099' }
+      ]
+    });
+
     if (!user) {
-      user = await User.create(seedData.user);
-      console.log('✅ Seeded Abhilasha user account in MongoDB');
+      user = new User({
+        username: seedData.user.username || 'Abhilasha',
+        email: 'jhaaabhilasha553@gmail.com',
+        mobile: '8757313099',
+        college: 'Techno India University',
+        studentId: '221001001392',
+        password: 'Laddugoapl@1',
+        isEmailVerified: true
+      });
+      await user.save();
+      console.log('✅ Created Abhilasha user account in MongoDB');
     } else {
       user.college = 'Techno India University';
       user.studentId = '221001001392';
+      user.email = 'jhaaabhilasha553@gmail.com';
+      user.password = 'Laddugoapl@1';
+      user.isEmailVerified = true;
       await user.save();
+      console.log('✅ Updated Abhilasha credentials in MongoDB');
     }
 
     // 2. Ensure listings exist
