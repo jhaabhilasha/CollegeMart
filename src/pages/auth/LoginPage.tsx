@@ -42,6 +42,7 @@ const LoginPage = () => {
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotError, setForgotError] = useState('');
   const [forgotSuccess, setForgotSuccess] = useState('');
+  const [forgotDevOtp, setForgotDevOtp] = useState<string | null>(null);
 
   // Password matching helpers for Forgot Password
   const hasTypedConfirm = forgotConfirmPassword.length > 0;
@@ -94,6 +95,7 @@ const LoginPage = () => {
     e.preventDefault();
     setForgotError('');
     setForgotSuccess('');
+    setForgotDevOtp(null);
     setForgotLoading(true);
     try {
       const res = await fetch('/api/auth/request-reset', {
@@ -105,8 +107,11 @@ const LoginPage = () => {
       if (!res.ok) {
         throw new Error(data.message || 'Failed to send reset OTP');
       }
+      if (data.otp) {
+        setForgotDevOtp(data.otp);
+      }
       setForgotStep(2);
-      setForgotSuccess('A 6-digit OTP has been sent to your email.');
+      setForgotSuccess(data.message || 'A 6-digit OTP has been sent to your email.');
     } catch (err) {
       setForgotError(err instanceof Error ? err.message : 'Failed to send reset OTP. Please check the email and try again.');
     } finally {
@@ -482,6 +487,24 @@ const LoginPage = () => {
               {forgotStep === 2 && (
                 <form onSubmit={handleVerifyForgotOtpAndReset} className="space-y-4">
                   {/* OTP Field */}
+                  {forgotDevOtp && (
+                    <div className="p-3 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-xs flex items-center justify-between shadow-sm animate-fade-in">
+                      <div>
+                        <span className="font-bold">🔑 Your Verification Code:</span>{' '}
+                        <span className="font-mono text-sm font-extrabold tracking-wider text-amber-900 bg-amber-200 px-2 py-0.5 rounded">
+                          {forgotDevOtp}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setForgotOtp(forgotDevOtp)}
+                        className="text-xs bg-orange-600 hover:bg-orange-700 text-white font-bold px-2.5 py-1 rounded-md transition shadow"
+                      >
+                        Auto-Fill
+                      </button>
+                    </div>
+                  )}
+
                   <div>
                     <div className="flex items-center justify-between mb-1">
                       <label htmlFor="forgot-otp" className="block text-sm font-medium text-gray-700">
@@ -509,6 +532,9 @@ const LoginPage = () => {
                       value={forgotOtp}
                       onChange={e => setForgotOtp(e.target.value.replace(/\D/g, ''))}
                     />
+                    <p className="text-xs text-gray-500 mt-1.5 italic">
+                      💡 Tip: Check your Email inbox & <strong>Spam/Junk</strong> folder. In local development, the OTP is also printed in your backend terminal console.
+                    </p>
                   </div>
 
                   {/* New Password */}
