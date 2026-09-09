@@ -195,14 +195,29 @@ exports.requestPasswordReset = async (req, res) => {
     user.resetOtpExpires = Date.now() + 10 * 60 * 1000; // 10 min
     await user.save();
 
+    console.log('\n======================================================');
+    console.log(`🔐 [PASSWORD RESET OTP]`);
+    console.log(`👤 User Email : ${email}`);
+    console.log(`🔑 6-Digit OTP : ${otp}`);
+    console.log(`⏰ Valid For   : 10 Minutes`);
+    console.log('======================================================\n');
+
+    let emailSent = false;
     try {
       await sendOtpEmail(email, otp, 'Password Reset');
+      emailSent = true;
     } catch (mailErr) {
-      console.warn('Failed to send reset OTP email via SendGrid:', mailErr.message);
+      console.warn('⚠️ SendGrid email delivery notice:', mailErr.message);
     }
 
-    res.json({ message: 'OTP sent to your email. Please enter the OTP to reset your password.' });
+    res.json({
+      message: emailSent 
+        ? 'OTP sent to your email. Please check your Inbox and Spam/Junk folders.' 
+        : 'OTP generated successfully! Check your server terminal or use the code below.',
+      otp: (!emailSent || process.env.NODE_ENV !== 'production') ? otp : undefined
+    });
   } catch (err) {
+    console.error('Password reset request error:', err);
     res.status(500).json({ message: 'Failed to process password reset request' });
   }
 };
@@ -259,13 +274,25 @@ exports.sendLoginOtp = async (req, res) => {
     user.loginOtpExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
     await user.save();
 
+    console.log('\n======================================================');
+    console.log(`🔐 [LOGIN OTP]`);
+    console.log(`👤 User Email : ${email}`);
+    console.log(`🔑 6-Digit OTP : ${otp}`);
+    console.log(`⏰ Valid For   : 10 Minutes`);
+    console.log('======================================================\n');
+
+    let emailSent = false;
     try {
       await sendOtpEmail(email, otp, 'Login');
+      emailSent = true;
     } catch (err) {
       console.warn('Failed to send login OTP email:', err.message);
     }
 
-    res.json({ message: 'OTP sent to your email' });
+    res.json({
+      message: emailSent ? 'OTP sent to your email' : 'OTP generated. Check server console or code below.',
+      otp: (!emailSent || process.env.NODE_ENV !== 'production') ? otp : undefined
+    });
   } catch (err) {
     res.status(500).json({ message: 'Failed to send login OTP' });
   }

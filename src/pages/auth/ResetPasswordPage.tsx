@@ -14,6 +14,7 @@ const ResetPasswordPage = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [devOtp, setDevOtp] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Real-time password matching helpers
@@ -25,10 +26,14 @@ const ResetPasswordPage = () => {
     e.preventDefault();
     setError('');
     setMessage('');
+    setDevOtp(null);
     setLoading(true);
     try {
       const res = await axios.post('/api/auth/request-reset', { email: email.trim() });
       setMessage(res.data.message || 'OTP sent to your email.');
+      if (res.data.otp) {
+        setDevOtp(res.data.otp);
+      }
       setStep(2);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response?.data?.message) {
@@ -150,6 +155,23 @@ const ResetPasswordPage = () => {
 
         {step === 2 && (
           <form onSubmit={handleResetPassword} className="space-y-4">
+            {devOtp && (
+              <div className="p-3 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-xs flex items-center justify-between shadow-sm animate-fade-in">
+                <div>
+                  <span className="font-bold">🔑 Your Verification Code:</span>{' '}
+                  <span className="font-mono text-sm font-extrabold tracking-wider text-amber-900 bg-amber-200 px-2 py-0.5 rounded">
+                    {devOtp}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setOtp(devOtp)}
+                  className="text-xs bg-orange-600 hover:bg-orange-700 text-white font-bold px-2.5 py-1 rounded-md transition shadow"
+                >
+                  Auto-Fill
+                </button>
+              </div>
+            )}
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
@@ -174,6 +196,9 @@ const ResetPasswordPage = () => {
                 required
                 autoFocus
               />
+              <p className="text-xs text-gray-500 mt-1.5 italic">
+                💡 Tip: Check your Email inbox & <strong>Spam/Junk</strong> folder. In local development, the OTP is also printed in your backend terminal console.
+              </p>
             </div>
 
             {/* New Password with Eye Toggle */}
